@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Ignore specific file types within assets directory
+src/assets/*.txt
+src/assets/*.pdf
+
 # Distribution / packaging
 .Python
 build/
