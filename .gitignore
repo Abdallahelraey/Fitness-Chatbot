@@ -7,8 +7,8 @@ __pycache__/
 *.so
 
 # Ignore specific file types within assets directory
-src/assets/*.txt
-src/assets/*.pdf
+src/assets/files/*.txt
+src/assets/files/*.pdf
 
 # Distribution / packaging
 .Python
