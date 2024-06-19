@@ -14,6 +14,9 @@ class BaseController:
             self.base_dir,
             "assets/files"
         )
-        
+        self.db_dir = os.path.join(
+        self.base_dir,
+        "assets/chroma"
+        )
     def generate_random_string(self, length: int=12):
         return ''.join(random.choices(string.ascii_lowercase + string.digits, k=length))
