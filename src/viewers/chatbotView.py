@@ -40,8 +40,8 @@ class ChatbotView:
                 response = self.controller.process_query(doc_name, query)
                 if isinstance(response, dict):
                     st.write(response["result"])
-                    for doc in response["source_documents"]:
-                        st.write(f"Source: {doc.metadata['source']}")
-                        st.write(doc.page_content)
+                    st.write(response["source_documents"])
+                    st.write(response["scores"])
+
                 else:
                     st.write(response)
