@@ -20,7 +20,7 @@ class BaseDataModel:
 
     def load_documents(self, doc_name):
         file_abs_path = self.DocumentController.get_project_path(Doc_name=doc_name)
-        loader = TextLoader(file_abs_path)
+        loader = TextLoader(file_abs_path, encoding="utf-8")
         documents = loader.load()
         return documents
 
@@ -41,6 +41,7 @@ class BaseDataModel:
         db.persist()
         print(f"Saved {len(chunks)} chunks to {self.db_dir}.")
 
+
     def search_chroma_db(self, query_text):
         db = Chroma(persist_directory=self.db_dir, embedding_function=self.embeddings)
         results = db.similarity_search_with_relevance_scores(query_text, k=3)
@@ -60,4 +61,3 @@ class BaseDataModel:
         prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
         prompt = prompt_template.format(context=context_text, question=query_text)
         return prompt
-        

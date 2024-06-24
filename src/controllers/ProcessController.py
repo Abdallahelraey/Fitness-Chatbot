@@ -3,60 +3,54 @@ from src.utils.config import get_settings, Settings
 from src.models import BaseDataModel
 from langchain_groq import ChatGroq
 from src.models import BaseDataModel
+from typing import List, Dict, Any
 
 class ProcessController(BaseController):
-
     def __init__(self):
         super().__init__()
         self.app_settings = get_settings()
         self.db_dir = self.app_settings.DB_DIR
         self.model = BaseDataModel()
+        self.processed_docs = set()  # Keep track of processed documents
 
-    # def process_query(self, doc_name, query_text):
-    #     documents = self.model.load_documents(doc_name)
-    #     chunks = self.model.split_text(documents)
-    #     self.model.save_to_chroma(chunks)
+    def ensure_document_processed(self, doc_name: str) -> None:
+        if doc_name not in self.processed_docs:
+            self._load_and_prepare_documents(doc_name)
+            self.processed_docs.add(doc_name)
 
-    #     results = self.model.search_chroma_db(query_text)
-    #     if not results:
-    #         return "Unable to find matching results."
-
-    #     prompt = self.model.generate_prompt(query_text, results)
-    #     groq_model = ChatGroq(temperature=0, model_name="mixtral-8x7b-32768")
-    #     response_text = groq_model.invoke(prompt)
-
-    #     sources = [doc.metadata.get("source", "score") for doc,score in results]
-    #     formatted_response = f"Response: {response_text}\nSources: {sources}"
-
-    #     #return formatted_response
-    #     return {
-    #         "result": response_text,
-    #         "source_documents": [doc for doc,score in results]
-    #     }
-    
-    def process_query(self, doc_name, query_text):
+    def _load_and_prepare_documents(self, doc_name: str) -> None:
         documents = self.model.load_documents(doc_name)
         chunks = self.model.split_text(documents)
         self.model.save_to_chroma(chunks)
 
-        results = self.model.search_chroma_db(query_text)
+    def _search_documents(self, query_text: str) -> List[Any]:
+        return self.model.search_chroma_db(query_text)
 
-        if not results:
-            return "Unable to find matching results."
-
+    def _generate_response(self, query_text: str, results: List[Any]) -> str:
         prompt = self.model.generate_prompt(query_text, results)
         groq_model = ChatGroq(temperature=0, model_name="mixtral-8x7b-32768")
-        response_text = groq_model.invoke(prompt)
-        displayed_response = response_text.content
-        sources = [doc.page_content for doc,_score in results]
-        scores = [score for doc, score in results]
-        # formatted_response = f"Response: {response_text}\nSources: {sources}\nscores: {scores}"
-        
-        # Create a list of dictionaries with source and score
-        # source_score_pairs = [{"source": doc.page_content, "score": score} for doc, score in results]
+        response = groq_model.invoke(prompt)
+        return response.content
 
+    def _extract_sources_and_scores(self, results: List[Any]) -> tuple[List[str], List[float]]:
+        sources = [doc.page_content for doc, _score in results]
+        scores = [score for _doc, score in results]
+        return sources, scores
+
+    def process_query(self, doc_name: str, query_text: str) -> Dict[str, Any]:
+        self.ensure_document_processed(doc_name)
+        results = self._search_documents(query_text)
+        if not results:
+            return {
+                "result": "Unable to find matching results.",
+                "source_documents": [],
+                "scores": []
+            }
+        displayed_response = self._generate_response(query_text, results)
+        sources, scores = self._extract_sources_and_scores(results)
         return {
             "result": displayed_response,
-            "source_documents": sources,  # Including only sources, not full documents
-            "scores": scores # Including scores
+            "source_documents": sources,
+            "scores": scores
         }
+        
