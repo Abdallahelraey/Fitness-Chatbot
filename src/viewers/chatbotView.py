@@ -29,8 +29,8 @@ class ChatbotView:
                     response = self.controller.process_query(doc_name, query)
                     if isinstance(response, dict):
                         st.write(response["result"])
+                        st.write("Knowledge Base Below")
                         st.write(response["source_documents"])
-                        st.write(response["scores"])
                     else:
                         st.write(response)
                 except Exception as e:

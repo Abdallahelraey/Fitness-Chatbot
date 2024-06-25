@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str
     DB_DIR: str 
     DATABASE_URL: str
-
+    HUGGING_FACE_API_KEY: str
 
     class Config:
         env_file = ".env"

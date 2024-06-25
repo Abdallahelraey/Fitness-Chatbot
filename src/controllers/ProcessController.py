@@ -21,7 +21,7 @@ class ProcessController(BaseController):
     def _load_and_prepare_documents(self, doc_name: str) -> None:
         documents = self.model.load_documents(doc_name)
         chunks = self.model.split_text(documents)
-        self.model.save_to_chroma(chunks)
+        self.model.save_to_chroma(chunks,doc_name)
 
     def _search_documents(self, query_text: str) -> List[Any]:
         return self.model.search_chroma_db(query_text)
@@ -32,10 +32,6 @@ class ProcessController(BaseController):
         response = groq_model.invoke(prompt)
         return response.content
 
-    def _extract_sources_and_scores(self, results: List[Any]) -> tuple[List[str], List[float]]:
-        sources = [doc.page_content for doc, _score in results]
-        scores = [score for _doc, score in results]
-        return sources, scores
 
     def process_query(self, doc_name: str, query_text: str) -> Dict[str, Any]:
         self.ensure_document_processed(doc_name)
@@ -47,10 +43,9 @@ class ProcessController(BaseController):
                 "scores": []
             }
         displayed_response = self._generate_response(query_text, results)
-        sources, scores = self._extract_sources_and_scores(results)
+        sources = "\n\n---\n\n".join([ "\n".join(result) for result in results ])
         return {
             "result": displayed_response,
             "source_documents": sources,
-            "scores": scores
         }
         

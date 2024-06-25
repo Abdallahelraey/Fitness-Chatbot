@@ -1,12 +1,15 @@
 from src.utils.config import get_settings, Settings
 from src.controllers import DocumentController
+from typing import List, Dict, Any
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.schema import Document
 from langchain_community.vectorstores import Chroma
-import shutil
+import chromadb.utils.embedding_functions as embedding_functions
+import chromadb
+import uuid
 import os
 
 
@@ -26,38 +29,60 @@ class BaseDataModel:
 
     def split_text(self, documents):
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=300,
-            chunk_overlap=100,
+            chunk_size=200,
+            chunk_overlap=50,
             length_function=len,
             add_start_index=True,
         )
         chunks = text_splitter.split_documents(documents)
         return chunks
 
-    def save_to_chroma(self, chunks):
-        if os.path.exists(self.db_dir):
-            shutil.rmtree(self.db_dir)
-        db = Chroma.from_documents(chunks, self.embeddings, persist_directory=self.db_dir)
-        db.persist()
-        print(f"Saved {len(chunks)} chunks to {self.db_dir}.")
+    def embedding_function_huggingface(self):
+        huggingface_ef = embedding_functions.HuggingFaceEmbeddingFunction(
+        api_key=self.app_settings.HUGGING_FACE_API_KEY,
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
+        return huggingface_ef
 
+    def derive_collection_name(self, doc_name):
+        # Derive collection name from document name (e.g., "example_document.txt" -> "example_document")
+        collection_name = doc_name.split('.')[0]
+        return collection_name
+
+    def save_to_chroma(self, chunks, doc_name):
+        collection_name = self.derive_collection_name(doc_name)
+        chroma_client = chromadb.PersistentClient(path=self.db_dir)
+        embedding_function = self.embedding_function_huggingface()
+        collection = chroma_client.get_or_create_collection(name=collection_name, embedding_function=embedding_function)
+        document_ids = [str(uuid.uuid4()) for _ in chunks]
+        collection.upsert(
+            documents=[doc.page_content for doc in chunks ],
+            ids=document_ids
+        )
 
     def search_chroma_db(self, query_text):
-        db = Chroma(persist_directory=self.db_dir, embedding_function=self.embeddings)
-        results = db.similarity_search_with_relevance_scores(query_text, k=3)
-        if len(results) == 0 or results[0][1] < 0.2:
-            print(f"Unable to find matching results.")
-            return []
-        return results
-
+        chroma_client = chromadb.PersistentClient(path=self.db_dir)
+        embedding_function = self.embedding_function_huggingface()
+        collection = chroma_client.get_or_create_collection(name="fitness", embedding_function=embedding_function)
+        results = collection.query(
+        query_texts=[query_text], # Chroma will embed this for you
+        n_results=5 # how many results to return
+        )
+        return  results["documents"]
+        # return {
+        # "results_documents": results["documents"],
+        # "results_distances": results["distances"]
+        # }
+        
     def generate_prompt(self, query_text, results):
         PROMPT_TEMPLATE = """
+        You are a fitness coach that have a knowledge base that spports your answers
         Answer the question based only on the following context:
         {context}
         ---
         Answer the question based on the above context: {question}
         """
-        context_text = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
+        context_text = "\n\n---\n\n".join([ "\n".join(result) for result in results ])
         prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
         prompt = prompt_template.format(context=context_text, question=query_text)
         return prompt
