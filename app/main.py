@@ -1,9 +1,10 @@
-import streamlit as st
-from src.viewers import ChatbotView
-def main():
-    view = ChatbotView()
-    view.run()
+# import streamlit as st
+# from src.viewers import StreamlitView
+# def main():
+#     view = StreamlitView()
+#     view.run()
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+    
     

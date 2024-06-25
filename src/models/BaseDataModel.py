@@ -73,16 +73,20 @@ class BaseDataModel:
         # "results_documents": results["documents"],
         # "results_distances": results["distances"]
         # }
-        
-    def generate_prompt(self, query_text, results):
+          
+    def generate_prompt(self, query_text, results, memory):
         PROMPT_TEMPLATE = """
-        You are a fitness coach that have a knowledge base that spports your answers
-        Answer the question based only on the following context:
+        You are a fitness coach for the XFit Organization with a knowledge base that supports your answers.
+        Answer the question based on the following context and conversation history:
+        {memory}
+        
+        Context from Knowledge base documents:
         {context}
+        
         ---
         Answer the question based on the above context: {question}
         """
-        context_text = "\n\n---\n\n".join([ "\n".join(result) for result in results ])
+        context_text = "\n\n---\n\n".join(["\n".join(result) for result in results])
         prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-        prompt = prompt_template.format(context=context_text, question=query_text)
+        prompt = prompt_template.format(memory=memory, context=context_text, question=query_text)
         return prompt

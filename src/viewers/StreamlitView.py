@@ -5,7 +5,7 @@ import streamlit as st
 from src.controllers import ProcessController
 from src.utils.config import get_settings, Settings
 
-class ChatbotView:
+class StreamlitView:
     def __init__(self):
         settings = get_settings()
         self.db_dir = settings.DB_DIR
