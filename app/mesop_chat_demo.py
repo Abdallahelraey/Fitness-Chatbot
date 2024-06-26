@@ -53,6 +53,3 @@ def transform(prompt: str, history: List[mel.ChatMessage]) -> str:
     # detailed_response = detailed_response = response["result"] + "\n" + response["source_documents"]
     # return detailed_response
     return response["result"]
-  
-  
-  
