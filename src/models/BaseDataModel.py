@@ -60,10 +60,11 @@ class BaseDataModel:
             ids=document_ids
         )
 
-    def search_chroma_db(self, query_text):
+    def search_chroma_db(self,doc_name ,query_text):
         chroma_client = chromadb.PersistentClient(path=self.db_dir)
         embedding_function = self.embedding_function_huggingface()
-        collection = chroma_client.get_or_create_collection(name="fitness", embedding_function=embedding_function)
+        collection_name = self.derive_collection_name(doc_name)
+        collection = chroma_client.get_or_create_collection(name=collection_name, embedding_function=embedding_function)
         results = collection.query(
         query_texts=[query_text], # Chroma will embed this for you
         n_results=5 # how many results to return
@@ -80,7 +81,7 @@ class BaseDataModel:
         Answer the question based on the following context and conversation history:
         {memory}
         
-        Context from Knowledge base documents:
+        Context from Knowledge base documents This is the part you have to give emphases to more than the conversation history:
         {context}
         
         ---

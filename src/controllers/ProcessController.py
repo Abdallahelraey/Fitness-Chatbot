@@ -18,7 +18,7 @@ class ProcessController(BaseController):
         self.model = BaseDataModel()
         self.processed_docs = set()  # Keep track of processed documents
         # self.memory = ConversationBufferMemory()  # Initialize memory
-        self.memory = ConversationBufferWindowMemory(k=10)
+        self.memory = ConversationBufferWindowMemory(k=10) # Initialize memory with a sliding window K
         self.conversation_history = self.memory.load_memory_variables({}) # Retrieve the conversation history
 
     def ensure_document_processed(self, doc_name: str) -> None:
@@ -31,8 +31,8 @@ class ProcessController(BaseController):
         chunks = self.model.split_text(documents)
         self.model.save_to_chroma(chunks,doc_name)
 
-    def _search_documents(self, query_text: str) -> List[Any]:
-        return self.model.search_chroma_db(query_text)
+    def _search_documents(self, doc_name ,query_text: str) -> List[Any]:
+        return self.model.search_chroma_db(query_text, doc_name)
 
     def _generate_response(self, query_text: str, results: List[Any]) -> str:
 
@@ -50,7 +50,7 @@ class ProcessController(BaseController):
 
     def process_query(self, doc_name: str, query_text: str) -> Dict[str, Any]:
         self.ensure_document_processed(doc_name)
-        results = self._search_documents(query_text)
+        results = self._search_documents(query_text,doc_name)
         if not results:
             return {
                 "result": "Unable to find matching results.",
