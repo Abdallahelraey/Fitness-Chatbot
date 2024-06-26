@@ -8,6 +8,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.schema import Document
 from langchain_community.vectorstores import Chroma
 import chromadb.utils.embedding_functions as embedding_functions
+from src.routes.LoginResponseParser import send_login_request,parse_response
 import chromadb
 import uuid
 import os
@@ -20,6 +21,7 @@ class BaseDataModel:
         self.db_dir = self.app_settings.DB_DIR
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.DocumentController = DocumentController()
+        self.user_data = None
 
     def load_documents(self, doc_name):
         file_abs_path = self.DocumentController.get_project_path(Doc_name=doc_name)
@@ -75,9 +77,16 @@ class BaseDataModel:
         # "results_distances": results["distances"]
         # }
           
+    def ingest_user_data(self, email, password):
+        response = send_login_request(email, password)
+        parsed_data = parse_response(response)
+        self.user_data  = parsed_data
+
+
     def generate_prompt(self, query_text, results, memory):
         PROMPT_TEMPLATE = """
-        You are a fitness coach for the XFit Organization with a knowledge base that supports your answers.
+        You are a fitness coach for the XFit Organization your main goal is to give personlized consultation for the user {user_data}
+        with a knowledge base that supports your answers.
         Answer the question based on the following context and conversation history:
         {memory}
         
@@ -88,6 +97,7 @@ class BaseDataModel:
         Answer the question based on the above context: {question}
         """
         context_text = "\n\n---\n\n".join(["\n".join(result) for result in results])
+        user_info = self.user_data
         prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-        prompt = prompt_template.format(memory=memory, context=context_text, question=query_text)
+        prompt = prompt_template.format(memory=memory, context=context_text, question=query_text, user_data=user_info)
         return prompt

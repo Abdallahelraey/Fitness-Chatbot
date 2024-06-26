@@ -34,6 +34,9 @@ class ProcessController(BaseController):
     def _search_documents(self, doc_name ,query_text: str) -> List[Any]:
         return self.model.search_chroma_db(query_text, doc_name)
 
+    def ingest_user_data(self, email: str, password: str) -> None:
+        self.model.ingest_user_data(email, password)
+
     def _generate_response(self, query_text: str, results: List[Any]) -> str:
 
         # Generate the prompt using the model's generate_prompt method

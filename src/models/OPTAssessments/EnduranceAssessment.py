@@ -43,7 +43,7 @@ class EnduranceAssessment(OPTPhaseAssessment):
         running_distance = float(input("Enter the distance (in meters) you ran for 12 minutes: "))
         running_time = 12
         self.record_user_data({'running_distance': running_distance, 'running_time': running_time})
-        age = int(input("Enter your age: "))
+        age = int(self.user_data.get("age"))
         self.record_user_data({'age': age})
         # Calculate the endurance score
         self.calculate_score()

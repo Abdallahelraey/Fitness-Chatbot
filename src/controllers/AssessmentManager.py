@@ -62,3 +62,22 @@ class AssessmentManager:
             string: The assessment level for the specified phase, or None if the phase is not found.
         """
         return self.assessment_levels.get(phase_name)
+    
+    def get_assessment_data(self):
+        assessment_types = [
+            "StrengthAssessment",
+            "EnduranceAssessment",
+            "FlexibilityAssessment",
+            "PowerAssessment",
+            "StabilizationAssessment"
+        ]
+        
+        result = {}
+        
+        for assessment_type in assessment_types:
+            result[assessment_type] = {
+                "Score": self.get_score_for_phase(assessment_type),
+                "Level": self.get_level_for_phase(assessment_type)
+            }
+        
+        return result

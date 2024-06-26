@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     DB_DIR: str 
     DATABASE_URL: str
     HUGGING_FACE_API_KEY: str
+    MONGO_URI: str
 
     class Config:
         env_file = ".env"

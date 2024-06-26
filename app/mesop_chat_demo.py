@@ -34,7 +34,7 @@ def fitness_button_click(action: me.ClickEvent):
   security_policy=me.SecurityPolicy(
     allowed_iframe_parents=["https://google.github.io"]
   ),
-  path="/chat",
+  path="/",
   title="AI Fitness Coach",
 )
 def chat():
@@ -49,6 +49,10 @@ def transform(prompt: str, history: List[mel.ChatMessage]) -> str:
     history_string = process_controller.conversation_history
     
     doc_name = state.doc_name  
+    # Example usage
+    email = "AbdullahGom3a@gmail.com",
+    password ="gom3a2001"
+    process_controller.ingest_user_data(email=email , password=password)
     response = process_controller.process_query(doc_name, prompt)
     # detailed_response = detailed_response = response["result"] + "\n" + response["source_documents"]
     # return detailed_response
