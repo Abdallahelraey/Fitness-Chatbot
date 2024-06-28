@@ -30,7 +30,7 @@ The RAG architecture allows the chatbot to provide more informative and factual 
 2. Install the required dependencies:
 
    ```
-   pip install -r requirements.txt
+   $ python setup.py develop 
    ```
 
 ## Usage
