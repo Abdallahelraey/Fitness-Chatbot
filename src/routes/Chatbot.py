@@ -55,3 +55,13 @@ async def get_user(user_request: UserRequest):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@chat_router.post("/chat/")
+async def chat(request: ChatRequest):
+    try:
+        # Ensure user data is ingested
+        process_controller.ingest_user_data(email=request.email, password=request.password)
+        # Store the user data (optional, if needed)
+        response = process_controller.process_query(request.doc_name, request.prompt)
+        return {"result": response["result"]}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
