@@ -35,7 +35,11 @@ The RAG architecture allows the chatbot to provide more informative and factual 
 
 ## Usage
 
+### Run the FastAPI server
 
+```bash
+$ uvicorn main:app  --reload --host 0.0.0.0 
+```
 
 ## Contributing
 
