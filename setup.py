@@ -6,6 +6,7 @@ def read_requirements(file):
     with open(file, encoding='utf-8') as f:
         return f.read().splitlines()
 
+
 setup(
    name='chatbot',
    version='1.0',
