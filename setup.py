@@ -2,8 +2,9 @@ from setuptools import setup ,find_packages
 
 from pkg_resources import parse_requirements
 
-with open('requirements.txt') as f:
-    requirements = [str(req) for req in parse_requirements(f)]
+def read_requirements(file):
+    with open(file, encoding='utf-8') as f:
+        return f.read().splitlines()
 
 setup(
    name='chatbot',
@@ -12,6 +13,6 @@ setup(
    author='Abdullah Jumaa',
    author_email='abdullah.m.jumaa@gmail.com',
    packages=find_packages(),  
-   install_requires=requirements,
+   install_requires=read_requirements('requirements.txt'),
 )
 
