@@ -6,12 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
-# Ignore specific file types within assets directory
-src/assets/files/*.txt
-src/assets/files/*.pdf
+# # Ignore specific file types within assets directory
+# src/assets/files/*.txt
+# src/assets/files/*.pdf
 
-# Ignore all db files within assets directory
-src/assets/chroma/*
+# # Ignore all db files within assets directory
+# src/assets/chroma/*
 
 # Distribution / packaging
 .Python
