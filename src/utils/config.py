@@ -9,7 +9,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     HUGGING_FACE_API_KEY: str
     MONGO_URI: str
-
+    FILE_ALLOWED_TYPES: list
+    FILE_MAX_SIZE: int
     class Config:
         env_file = ".env"
 
