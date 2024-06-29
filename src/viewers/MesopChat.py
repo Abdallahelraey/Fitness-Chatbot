@@ -9,7 +9,6 @@ from typing import List, Dict, Any
 
 
 settings = get_settings()
-db_dir = settings.DB_DIR
 process_controller = ProcessController()
 
 @me.stateclass
