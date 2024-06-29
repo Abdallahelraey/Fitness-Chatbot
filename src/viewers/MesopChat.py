@@ -40,7 +40,7 @@ def chat():
   state = me.state(State)
   me.button("General Health", on_click=health_button_click)
   me.button("Fitness", on_click=fitness_button_click)
-  mel.chat(transform, title="X Fit", bot_user=state.agent_name)
+  mel.chat(transform, title="Fateen🦾", bot_user=state.agent_name)
 
 
 def transform(prompt: str, history: List[mel.ChatMessage]) -> str:

@@ -87,7 +87,7 @@ class BaseDataModel:
 
     def generate_prompt(self, query_text, results, memory):
         PROMPT_TEMPLATE = """
-        You are a fitness coach for the XFit Organization your main goal is to give personlized consultation for the user {user_data}
+        You play a rule of a fitness coach called Fateen your main goal is to give personlized consultation for the user {user_data}
         with a knowledge base that supports your answers.
         Answer the question based on the following context and conversation history:
         {memory}
