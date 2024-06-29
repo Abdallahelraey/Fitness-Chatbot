@@ -1,5 +1,6 @@
 from src.utils.config import get_settings, Settings
 from src.controllers import DocumentController
+from src.controllers import BaseController
 from typing import List, Dict, Any
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -18,9 +19,10 @@ class BaseDataModel:
 
     def __init__(self):
         self.app_settings = get_settings()
-        self.db_dir = self.app_settings.DB_DIR
         self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.DocumentController = DocumentController()
+        self.base_controller = BaseController()
+        self.db_dir = self.base_controller.db_dir
         self.user_data = None
 
     def load_documents(self, doc_name):

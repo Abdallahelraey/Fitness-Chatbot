@@ -14,7 +14,7 @@ class ProcessController(BaseController):
     def __init__(self):
         super().__init__()
         self.app_settings = get_settings()
-        self.db_dir = self.app_settings.DB_DIR
+        self.db_dir = self.db_dir
         self.model = BaseDataModel()
         self.processed_docs = set()  # Keep track of processed documents
         # self.memory = ConversationBufferMemory()  # Initialize memory

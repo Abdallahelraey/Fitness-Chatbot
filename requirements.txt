@@ -27,7 +27,6 @@ deepdiff==6.7.1
 Deprecated==1.2.14
 distro==1.9.0
 dnspython==2.6.1
-dotenv==0.0.5
 duckduckgo_search==6.1.7
 email_validator==2.1.2
 executing==2.0.1
