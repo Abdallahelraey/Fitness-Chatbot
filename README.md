@@ -31,7 +31,7 @@ Containerization: Docker
 Backend: FastAPI
 
 ## System Flow Diagram
-![System Design](D:\Graduation project ALL 4th\Project Files\chatbot\src\assets\System Design.drawio.png)
+![alt text](<System Design.drawio.png>)
 
 This diagram illustrates the data flow and processing steps in the application, including:
 
@@ -42,7 +42,7 @@ This diagram illustrates the data flow and processing steps in the application, 
 
 
 ## UML Class Diagram
-![System UML Diagram](D:\Graduation project ALL 4th\Project Files\chatbot\src\assets\System UML Diagram2.png)
+![alt text](<System UML Diagram2.png>)
 This diagram shows the structure of the application's codebase, including:
 
 Assets (Chroma collections and document files)
@@ -111,7 +111,7 @@ uvicorn main:app  --reload --host 0.0.0.0
 mesop chatbot\src\viewers\MesopChat.py
 ```
 #### Mesop Chat demo
-![Mesop Chat demo](src/assets/Screenshot 2024-06-29 141707.png)
+![alt text](<Screenshot 2024-06-29 141707.png>)
 
 
 For detailed API documentation, visit http://localhost:8000/docs after starting the application.
