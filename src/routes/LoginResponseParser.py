@@ -1,7 +1,9 @@
 import requests
+from src.utils.config import get_settings, Settings
 
 def send_login_request(email, password):
-    url = "https://x-fit-backend-graduation-project.onrender.com/api/v1/user/login"
+    app_settings = get_settings()
+    url = app_settings.LOGIN_RESPONCE_ENDPOINT
     
     payload = {
         "email": email,

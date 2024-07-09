@@ -1,7 +1,7 @@
 from src.routes.LoginResponseParser import parse_response
 import requests
 import json
-
+from src.utils.config import get_settings, Settings
 
 def get_assessment_data(assessment_manager):
     assessment_types = [
@@ -23,9 +23,11 @@ def get_assessment_data(assessment_manager):
     return result
 
 # Endpoint URL and Authorization Token
-endpoint_url = "https://x-fit-backend-graduation-project.onrender.com/api/v1/user/updateUserAssessment"
+app_settings = get_settings()
+endpoint_url = app_settings.ASSESMENT_ENDPOINT_URL
+Authorization_tocken = app_settings.ASSESMENT_ENDPOINT_AUTHORIZATION_TOCKEN
 headers = {
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiI2NWZkOTllNDgwYWEwMzgzNDUwZjZlMjIiLCJuYW1lIjoiU2FhZCBIdXNzZWluIiwiZGF0ZSI6IldlZCBKdW4gMjYgMjAyNCAwODo0MzoyMSBHTVQrMDAwMCAoQ29vcmRpbmF0ZWQgVW5pdmVyc2FsIFRpbWUpIiwiaWF0IjoxNzE5MzkxNDAxfQ.cM5Fo5-Etaio5ecqmWa9EMuG0EjhR7brr2tl82rfdjc',
+    'Authorization': Authorization_tocken,
     'Content-Type': 'application/json'
 }
 
