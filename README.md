@@ -1,4 +1,4 @@
-# Personal Coach AI
+# AI Personal Coach 
 
 This is a Retrieval-Augmented Generation (RAG) based chatbot application that combines a retrieval component and a generative language model to provide informative and context-aware responses.
 
@@ -30,7 +30,7 @@ Frontend: Mesop (for chat interface), Streamlit for prototyping
 Containerization: Docker
 Backend: FastAPI
 
-System Flow Diagram
+## System Flow Diagram
 ![alt text](<System Design.drawio.png>)
 
 This diagram illustrates the data flow and processing steps in the application, including:
