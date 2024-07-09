@@ -110,7 +110,8 @@ uvicorn main:app  --reload --host 0.0.0.0
 ```
 mesop chatbot\src\viewers\MesopChat.py
 ```
-
+#### Mesop Chat demo
+![alt text](<Screenshot 2024-06-29 141707.png>)
 
 
 For detailed API documentation, visit http://localhost:8000/docs after starting the application.
